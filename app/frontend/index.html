@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finance Upload Unified</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Finance Upload Unified</h1>
+      <p>อัปโหลดไฟล์ Excel, ดู Preview, ดาวน์โหลดผลลัพธ์ หรือส่งเข้าฐานข้อมูล SQL Server ได้ทันที</p>
+
+      <section class="card">
+        <h2>1) เลือกไฟล์และตั้งค่า</h2>
+        <input id="excel-file" type="file" accept=".xlsx,.xls" />
+        <div class="grid">
+          <label>Finance Sent Label <input id="label-sent" value="ส่งไฟแนนซ์" /></label>
+          <label>Finance Broker Label <input id="label-broker" value="นายหน้าไฟแนนซ์" /></label>
+          <label>Duplicate Mode
+            <select id="duplicate-mode">
+              <option value="keep">keep</option>
+              <option value="group">group</option>
+            </select>
+          </label>
+        </div>
+        <div class="actions">
+          <button id="btn-preview">Preview</button>
+          <button id="btn-download">Transform + Download</button>
+          <button id="btn-import">Transform + Import DB</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>2) ผลลัพธ์</h2>
+        <pre id="summary">ยังไม่มีผลลัพธ์</pre>
+      </section>
+
+      <section class="card">
+        <h2>3) Preview (สูงสุด 200 แถว)</h2>
+        <div class="table-wrap">
+          <table id="preview-table"></table>
+        </div>
+      </section>
+    </main>
+    <script src="/static/app.js"></script>
+  </body>
+  </html>
