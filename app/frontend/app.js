@@ -5,6 +5,14 @@ const btnImport = document.getElementById("btn-import");
 const summary = document.getElementById("summary");
 const table = document.getElementById("preview-table");
 
+async function parseApiResponse(response) {
+  const contentType = response.headers.get("content-type") || "";
+  if (contentType.includes("application/json")) {
+    return await response.json();
+  }
+  return { detail: (await response.text()) || `HTTP ${response.status}` };
+}
+
 function buildOptions() {
   return {
     mapping: {
@@ -72,7 +80,7 @@ async function doPreview() {
   setBusy(true);
   try {
     const response = await fetch("/api/preview", { method: "POST", body: getFormData() });
-    const payload = await response.json();
+    const payload = await parseApiResponse(response);
     if (!response.ok) throw new Error(JSON.stringify(payload));
     summary.textContent = JSON.stringify(payload.stats, null, 2);
     renderTable(payload.columns, payload.rows);
@@ -107,7 +115,7 @@ async function doTransformImport() {
   setBusy(true);
   try {
     const response = await fetch("/api/transform-import", { method: "POST", body: getFormData() });
-    const payload = await response.json();
+    const payload = await parseApiResponse(response);
     if (!response.ok) throw new Error(JSON.stringify(payload));
     summary.textContent = JSON.stringify(payload, null, 2);
   } catch (error) {

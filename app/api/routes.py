@@ -6,6 +6,7 @@ from uuid import uuid4
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile, status
 from fastapi.responses import JSONResponse, StreamingResponse
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
@@ -102,12 +103,22 @@ async def transform_import(
     if result.issues:
         return JSONResponse(status_code=422, content={"issues": result.issues})
     correlation_id = getattr(request.state, "correlation_id", str(uuid4()))
-    return import_dataframe_to_db(
-        db=db,
-        frame=result.dataframe,
-        filename=file.filename or "finance-screening-output.xlsx",
-        correlation_id=correlation_id,
-    )
+    try:
+        return import_dataframe_to_db(
+            db=db,
+            frame=result.dataframe,
+            filename=file.filename or "finance-screening-output.xlsx",
+            correlation_id=correlation_id,
+        )
+    except SQLAlchemyError as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Database connection failed while importing data. "
+                "Please verify SQL Server credentials and database access."
+            ),
+        ) from exc
 
 
 @router.post("/imports/upload", response_model=ImportResult, status_code=status.HTTP_201_CREATED)
@@ -129,12 +140,22 @@ async def upload_import(
     except ExcelReadError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     correlation_id = getattr(request.state, "correlation_id", str(uuid4()))
-    return import_dataframe_to_db(
-        db=db,
-        frame=frame,
-        filename=file.filename or "unknown.xlsx",
-        correlation_id=correlation_id,
-    )
+    try:
+        return import_dataframe_to_db(
+            db=db,
+            frame=frame,
+            filename=file.filename or "unknown.xlsx",
+            correlation_id=correlation_id,
+        )
+    except SQLAlchemyError as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Database connection failed while importing data. "
+                "Please verify SQL Server credentials and database access."
+            ),
+        ) from exc
 
 
 @router.get("/imports/{job_id}", response_model=ImportJobResponse)
