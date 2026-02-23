@@ -56,7 +56,6 @@ def _validate_required_columns(df: pd.DataFrame, options: TransformOptions) -> l
     return [f"Missing required columns: {', '.join(missing)}"] if missing else []
 
 
-<<<<<<< HEAD
 CANCEL_VALUE_DROP = "**ยกเลิก**"
 CANCEL_COLUMN_CANDIDATES = ["(ยกเลิก)", "ยกเลิก", "cancel_flag"]
 
@@ -80,10 +79,6 @@ def _drop_cancelled_rows(df: pd.DataFrame) -> pd.DataFrame:
 def apply_business_rules(df: pd.DataFrame, options: TransformOptions) -> RuleEngineResult:
     working_df = df.copy()
     working_df = _drop_cancelled_rows(working_df)
-=======
-def apply_business_rules(df: pd.DataFrame, options: TransformOptions) -> RuleEngineResult:
-    working_df = df.copy()
->>>>>>> aa08228d40800eb2dc3556e21881a03e613ffcc2
     mapping = options.mapping
     issues = _validate_required_columns(working_df, options)
     if issues:

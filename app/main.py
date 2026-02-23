@@ -1,9 +1,6 @@
 from __future__ import annotations
 
-<<<<<<< HEAD
 import logging
-=======
->>>>>>> aa08228d40800eb2dc3556e21881a03e613ffcc2
 from pathlib import Path
 from uuid import uuid4
 
@@ -15,14 +12,9 @@ from fastapi.staticfiles import StaticFiles
 from app.api.routes import router
 from app.core.config import get_settings
 from app.db.models import Base
-<<<<<<< HEAD
 from app.db.session import get_engine
 
 logger = logging.getLogger(__name__)
-=======
-from app.db.session import engine
-
->>>>>>> aa08228d40800eb2dc3556e21881a03e613ffcc2
 settings = get_settings()
 app = FastAPI(title=settings.app_name)
 
@@ -45,7 +37,6 @@ async def add_correlation_id(request: Request, call_next):
 
 @app.on_event("startup")
 def on_startup() -> None:
-<<<<<<< HEAD
     """สร้างตารางเมื่อมี SQL Server พร้อม ไม่บล็อกการรันแอปถ้าเชื่อมต่อไม่ได้"""
     try:
         Base.metadata.create_all(bind=get_engine())
@@ -54,9 +45,6 @@ def on_startup() -> None:
             "Could not connect to SQL Server at startup (Transform + Download still works): %s",
             e,
         )
-=======
-    Base.metadata.create_all(bind=engine)
->>>>>>> aa08228d40800eb2dc3556e21881a03e613ffcc2
 
 
 app.include_router(router)

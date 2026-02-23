@@ -1,11 +1,7 @@
 from __future__ import annotations
 
 from sqlalchemy import create_engine, text
-<<<<<<< HEAD
 from sqlalchemy.engine import Engine, make_url
-=======
-from sqlalchemy.engine import make_url
->>>>>>> aa08228d40800eb2dc3556e21881a03e613ffcc2
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import get_settings
@@ -37,7 +33,6 @@ def _ensure_sqlserver_database_exists(connection_string: str) -> None:
         admin_engine.dispose()
 
 
-<<<<<<< HEAD
 _engine: Engine | None = None
 _SessionLocal: sessionmaker[Session] | None = None
 
@@ -70,19 +65,6 @@ def get_session_factory() -> sessionmaker[Session]:
 
 def get_db():
     db = get_session_factory()()
-=======
-settings = get_settings()
-_ensure_sqlserver_database_exists(settings.sqlserver_connection_string)
-engine = create_engine(
-    settings.sqlserver_connection_string,
-    pool_pre_ping=True,
-)
-SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, class_=Session)
-
-
-def get_db():
-    db = SessionLocal()
->>>>>>> aa08228d40800eb2dc3556e21881a03e613ffcc2
     try:
         yield db
     finally:

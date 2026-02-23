@@ -22,15 +22,11 @@ class Settings(BaseSettings):
     max_upload_size_mb: int = 20
     allowed_extensions: list[str] = [".xlsx", ".xls"]
 
-<<<<<<< HEAD
     model_config = SettingsConfigDict(
         env_file=str(ENV_FILE),
         env_file_encoding="utf-8",
         extra="ignore",  # Ignore env vars not defined on Settings (e.g. stray or malformed .env lines)
     )
-=======
-    model_config = SettingsConfigDict(env_file=str(ENV_FILE), env_file_encoding="utf-8")
->>>>>>> aa08228d40800eb2dc3556e21881a03e613ffcc2
 
 
 @lru_cache
